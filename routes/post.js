@@ -12,6 +12,9 @@ router.get("/all", postController.get_all_posts);
 //Get by ID Method "/api/post/:id"
 router.get("/:id", postController.get_single_post);
 
+//Get by comments for post by ID Method "/api/post/:id/comments"
+router.get("/:id/comments", postController.get_post_comments);
+
 //Update by ID Method "/api/post/update/:id"
 router.put("/update/:id", postController.put_update_post);
 
