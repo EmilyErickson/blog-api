@@ -16,14 +16,15 @@ const postSchema = new Schema({
     type: String,
     required: true,
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
   published: {
     type: Boolean,
     default: false,
   },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
 });
 
 const Post = mongoose.model("Post", postSchema);
