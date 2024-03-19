@@ -18,4 +18,7 @@ router.put("/update/:id", userController.put_update_user);
 //Delete by ID Method  "/api/user/delete/:id"
 router.delete("/delete/:id", userController.delete_single_user);
 
+//Get all post by user "api/user/:id/posts"
+router.get("/:id/posts", userController.get_posts_by_user);
+
 module.exports = router;
