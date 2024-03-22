@@ -51,7 +51,6 @@ exports.post_user_login = asyncHandler(async (req, res, next) => {
 
     // Set currentUser in session
     req.session.currentUser = user;
-    console.log(req.session.currentUser);
 
     // Respond with success
     res.status(200).json({ message: "Login successful", user });

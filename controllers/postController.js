@@ -12,7 +12,6 @@ exports.get_all_posts = asyncHandler(async (req, res, next) => {
       const publishedPosts = await Post.find({ published: true });
       res.json(publishedPosts);
     } else {
-      console.log("user", currentUser);
       const posts = await Post.find();
 
       res.json(posts);
