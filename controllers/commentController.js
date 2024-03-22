@@ -3,12 +3,13 @@ const Comment = require("../models/comments");
 
 const asyncHandler = require("express-async-handler");
 
+//Create comment post method "api/comment/create"
 exports.post_create_comment = asyncHandler(async (req, res, next) => {
   const comment = new Comment({
-    authorEmail: req.body.email,
+    email: req.body.email,
     content: req.body.content,
     timestamp: req.body.timestamp,
-    post: req.body.postId,
+    postId: req.body.postId,
   });
   try {
     const post = await Post.findById(req.body.postId);
@@ -26,36 +27,43 @@ exports.post_create_comment = asyncHandler(async (req, res, next) => {
 
 //Delete by ID Method
 exports.post_delete_comment = asyncHandler(async (req, res, next) => {
-  try {
-    const commentId = req.params.id;
+  const currentUser = req.session.currentUser;
+  if (typeof currentUser === "undefined" || !currentUser) {
+    res.status(401).json({ message: "Please log in to delete comments." });
+  } else {
+    try {
+      const commentId = req.params.id;
 
-    // Find the comment to be deleted
-    const comment = await Comment.findById(commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
+      // Find the comment to be deleted
+      const comment = await Comment.findById(commentId);
+      if (!comment) {
+        return res.status(404).json({ message: "Comment not found" });
+      }
+
+      // Find the post associated with the comment
+      const postId = comment.post;
+      const post = await Post.findById(postId);
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      // Remove the comment from the post's comments array
+      const index = post.comments.indexOf(commentId);
+      if (index > -1) {
+        post.comments.splice(index, 1);
+      }
+
+      // Save the updated post
+      await post.save();
+
+      // Delete the comment
+      await Comment.findByIdAndDelete(commentId);
+
+      res
+        .status(200)
+        .json({ message: `Comment ${commentId} has been deleted.` });
+    } catch (error) {
+      res.status(400).json({ message: error.message });
     }
-
-    // Find the post associated with the comment
-    const postId = comment.post;
-    const post = await Post.findById(postId);
-    if (!post) {
-      return res.status(404).json({ message: "Post not found" });
-    }
-
-    // Remove the comment from the post's comments array
-    const index = post.comments.indexOf(commentId);
-    if (index > -1) {
-      post.comments.splice(index, 1);
-    }
-
-    // Save the updated post
-    await post.save();
-
-    // Delete the comment
-    await Comment.findByIdAndDelete(commentId);
-
-    res.status(200).json({ message: `Comment ${commentId} has been deleted.` });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
   }
 });
