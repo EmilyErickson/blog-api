@@ -28,6 +28,38 @@ exports.post_create_user = asyncHandler(async (req, res, next) => {
   }
 });
 
+//User login post method "/api/user/login"
+exports.post_user_login = asyncHandler(async (req, res, next) => {
+  const { username, password } = req.body;
+
+  try {
+    // Check if the user exists
+    const user = await User.findOne({ username });
+
+    // If user not found
+    if (!user) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    // Validate password
+    const validPassword = await bcrypt.compare(password, user.password);
+
+    // If password is invalid
+    if (!validPassword) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    // Set currentUser in session
+    req.session.currentUser = user;
+    console.log(req.session.currentUser);
+
+    // Respond with success
+    res.status(200).json({ message: "Login successful", user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 //Get all Method "/api/user/all"
 exports.get_all_users = asyncHandler(async (req, res, next) => {
   try {
