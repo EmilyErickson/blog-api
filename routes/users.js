@@ -15,6 +15,9 @@ router.get("/:id", userController.get_single_user);
 //Update by ID Method  "/api/user/update/:id"
 router.put("/update/:id", userController.put_update_user);
 
+//Login "/api/user/login"
+router.post("/login", userController.post_user_login);
+
 //Delete by ID Method  "/api/user/delete/:id"
 router.delete("/delete/:id", userController.delete_single_user);
 
