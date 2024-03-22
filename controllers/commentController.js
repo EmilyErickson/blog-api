@@ -41,7 +41,7 @@ exports.post_delete_comment = asyncHandler(async (req, res, next) => {
       }
 
       // Find the post associated with the comment
-      const postId = comment.post;
+      const postId = comment.postId;
       const post = await Post.findById(postId);
       if (!post) {
         return res.status(404).json({ message: "Post not found" });
