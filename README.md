@@ -26,7 +26,9 @@ Before running the server, you will need to have these installed on your system:
 3. Install dependencies:
  `npm install`
 
-4. Start the server:
+4. Create an .env file with your mongo connection string and a secret
+
+5. Start the server:
  `npm start`
 
 The server will start running at <http://localhost:3000> by default.
