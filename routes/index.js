@@ -4,6 +4,7 @@ const router = express.Router();
 const postController = require("../controllers/postController");
 
 //Post Method
-router.get("/", postController.get_all_posts);
-
+router.get("/", (req, res) => {
+  res.render("view/index", { title: "Blog" });
+});
 module.exports = router;
